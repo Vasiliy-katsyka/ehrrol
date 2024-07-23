@@ -167,7 +167,7 @@
 
 <div id="intro">
     <h1>TURTLES</h1>
-    <p>Hey, <span id="userName"></span>! TURTLES is a project that allows you to earn $TRTL just for your time spent inside telegram! More you online - more income! Start earning by clicking on this button.</p>
+    <p>Hey! TURTLES is a project that allows you to earn $TRTL just for your time spent inside telegram! More you online - more income! Start earning by clicking on this button.</p>
     <button id="startButton" class="button">Start</button>
 </div>
 
@@ -226,9 +226,6 @@
     let profitPerMinute = 0.1;
     let lastSeen = Date.now();
     let userName = Tg.WebAppUser.first_name;
-
-    // Update user name
-    document.getElementById('userName').textContent = userName;
 
     // Check if app is opened first time
     if (!localStorage.getItem('firstTime')) {
