@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TURTLES</title>
+    <style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+
+#intro h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+#intro p {
+    margin-bottom: 20px;
+}
+
+.button {
+    padding: 15px 30px;
+    background-color: #fff;
+    color: #000;
+    border: none;
+    font-size: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    border-radius: 15px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #000;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+}
+
+.profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.profile .name {
+    font-weight: bold;
+}
+
+.profile .username {
+    font-size: 0.8em;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1; /* Allow main content to grow */
+}
+
+main img {
+    width: 300px;
+    height: auto;
+}
+
+#balance {
+    font-size: 2em;
+    margin-top: 10px;
+}
+
+footer {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #fff;
+    position: fixed; /* Fix footer to the bottom */
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #000;
+}
+
+.footer-button svg {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 5px;
+    color: white;
+}
+
+#popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 1); /* Black background for popup */
+    z-index: 100;
+}
+
+#popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #fff;
+    cursor: pointer;
+}    </style>
+</head>
+<body>
+
+<div id="intro">
+    <h1>TURTLES</h1>
+    <p>Hey, <span id="userName"></span>! TURTLES is a project that allows you to earn $TRTL just for your time spent inside telegram! More you online - more income! Start earning by clicking on this button.</p>
+    <button id="startButton" class="button">Start</button>
+</div>
+
+<div id="app" style="display:none;">
+    <header>
+        <div class="profile">
+            <img id="profilePicture" src="https://cdn.midjourney.com/992a1d4b-0ede-4ade-9206-2008826b47fe/0_0.png" alt="Profile Picture">
+            <div>
+                <div id="firstName" class="name"></div>
+                <div id="userNameHeader" class="username"></div>
+            </div>
+        </div>
+        <h1>TURTLES</h1>
+    </header>
+
+    <main>
+        <img src="https://cdn.midjourney.com/992a1d4b-0ede-4ade-9206-2008826b47fe/0_0.png" alt="Logo" width="100" height="100"> <div id="balance">0 $TRTL</div>
+    </main>
+
+    <footer>
+        <div class="footer-button" data-section="home">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>home</title><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+        </div>
+        <div class="footer-button" data-section="ref"> 
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account-multiple</title><path d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z" /></svg>
+            Ref
+        </div>
+    </footer>
+</div>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    // Initialize Telegram web app
+    const Tg = window.Telegram.WebApp;
+    Tg.expand();
+
+    // Get user info
+    const firstNameElement = document.getElementById('firstName');
+    const userNameHeaderElement = document.getElementById('userNameHeader');
+    const profilePictureElement = document.getElementById('profilePicture');
+
+    firstNameElement.textContent = Tg.initDataUnsafe.user.first_name;
+    userNameHeaderElement.textContent = '@' + Tg.initDataUnsafe.user.username;
+    profilePictureElement.src = Tg.initDataUnsafe.user.photo_url;
+
+    // Elements
+    const intro = document.getElementById('intro');
+    const app = document.getElementById('app');
+    const startButton = document.getElementById('startButton');
+    const balanceElement = document.getElementById('balance');
+    const footerButtons = document.querySelectorAll('.footer-button');
+
+    // Variables
+    let balance = 0;
+    let profitPerMinute = 0.1;
+    let lastSeen = Date.now();
+    let userName = Tg.initDataUnsafe.user.first_name;
+
+    // Update user name
+    document.getElementById('userName').textContent = userName;
+
+    // Check if app is opened first time
+    if (!localStorage.getItem('firstTime')) {
+        localStorage.setItem('firstTime', 'false');
+    } else {
+        intro.style.display = 'none';
+        app.style.display = 'block';
+        loadState();
+        calculateOfflineProfit();
+    }
+
+    // Event Listeners
+    startButton.addEventListener('click', startApp);
+
+    footerButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const section = button.dataset.section;
+            handleFooterClick(section);
+        });
+    });
+
+    // Functions
+    function startApp() {
+        intro.style.display = 'none';
+        app.style.display = 'block';
+        saveState();
+    }
+
+    function handleFooterClick(section) {
+        switch (section) {
+            case 'home':
+                // Already on home page
+                break;
+            case 'ref':
+                Tg.showAlert('This section is not implemented yet.');
+                break;
+        }
+    }
+    
+    function addBalance(amount) {
+        balance += amount;
+        balanceElement.textContent = balance.toFixed(2) + ' $TRTL';
+        saveState();
+    }
+
+    function calculateOfflineProfit() {
+        const now = Date.now();
+        const minutesPassed = Math.floor((now - lastSeen) / (1000 * 60));
+
+        let earnedOffline = 0;
+        for (let i = 0; i < minutesPassed; i++) {
+            earnedOffline += profitPerMinute;
+            profitPerMinute = Math.max(0, profitPerMinute - 0.001);
+        }
+
+        if (earnedOffline > 0) {
+            Tg.showAlert(While you were away, you earned ${earnedOffline.toFixed(2)} $TRTL!);
+            addBalance(earnedOffline);
+        }
+    }
+
+    function updateUserStatus(status) {
+        switch (status) {
+            case 'online':
+                profitPerMinute = 1; 
+                break;
+            case 'offline':
+                profitPerMinute = 0.1; 
+                break;
+            default:
+                profitPerMinute = 0.1;
+        }
+    }
+
+    function saveState() {
+        localStorage.setItem('balance', balance);
+        localStorage.setItem('lastSeen', Date.now());
+    }
+
+    function loadState() {
+        balance = parseFloat(localStorage.getItem('balance')) || 0;
+        lastSeen = parseInt(localStorage.getItem('lastSeen')) || Date.now();
+        balanceElement.textContent = balance.toFixed(2) + ' $TRTL';
+    }
+
+    setInterval(() => {
+        if (document.visibilityState === 'visible') {
+            addBalance(profitPerMinute);
+        }
+    }, 60000);
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            saveState();
+        } else {
+            calculateOfflineProfit();
+        }
+    });
+</script>
+</body>
+</html>
