@@ -210,9 +210,9 @@
     const userNameHeaderElement = document.getElementById('userNameHeader');
     const profilePictureElement = document.getElementById('profilePicture');
 
-    firstNameElement.textContent = Tg.initDataUnsafe.user.first_name;
-    userNameHeaderElement.textContent = '@' + Tg.initDataUnsafe.user.username;
-    profilePictureElement.src = Tg.initDataUnsafe.user.photo_url;
+    firstNameElement.textContent = Tg.WebAppUser.first_name;
+    userNameHeaderElement.textContent = '@' + Tg.WebAppUser.username;
+    profilePictureElement.src = Tg.WebAppUser.photo_url;
 
     // Elements
     const intro = document.getElementById('intro');
@@ -225,7 +225,7 @@
     let balance = 0;
     let profitPerMinute = 0.1;
     let lastSeen = Date.now();
-    let userName = Tg.initDataUnsafe.user.first_name;
+    let userName = Tg.WebAppUser.first_name;
 
     // Update user name
     document.getElementById('userName').textContent = userName;
