@@ -327,6 +327,12 @@
             calculateOfflineProfit();
         }
     });
+    
+    window.onerror = function(message, source, lineno, colno, error) {
+        Tg.showAlert(`An error occurred. Please try again later. (Error details: ${message})`);
+        // You can also log the error to the console for debugging:
+        console.error(error); 
+    };
 </script>
 </body>
 </html>
